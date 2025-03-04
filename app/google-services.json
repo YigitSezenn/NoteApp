@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "78899156815",
+    "firebase_url": "https://notappdatab-default-rtdb.firebaseio.com",
+    "project_id": "notappdatab",
+    "storage_bucket": "notappdatab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78899156815:android:1be335644c14b189a6d73a",
+        "android_client_info": {
+          "package_name": "com.example.mynoteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78899156815-f2rpvul479j6nc79fb66i864nt6slkra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm86xvKDx4JBtoYG3eE0TuntdoppJnnDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78899156815-f2rpvul479j6nc79fb66i864nt6slkra.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
