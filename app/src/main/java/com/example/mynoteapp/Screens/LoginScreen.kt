@@ -3,6 +3,8 @@ package com.example.mynoteapp.Screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,10 +43,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,15 +58,23 @@ import com.example.mynoteapp.AppSettings.AppColors
 import com.example.mynoteapp.R
 
 import com.example.mynoteapp.ViewModel.LoginViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
+import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.auth.User
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 
 //val googleSignInLauncher =
 //    registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
@@ -82,12 +94,52 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navController: NavHostController,
     viewModel: LoginViewModel,
-
-    ) {
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
     val auth = viewModel.auth
+    val coroutineScope = rememberCoroutineScope()
+
+
+    suspend fun signInWithGoogle() {
+        val credentialManager = CredentialManager.create(context)
+
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setServerClientId(context.getString(R.string.default_web_client_id))
+            .setFilterByAuthorizedAccounts(false)
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        try {
+            val result = credentialManager.getCredential(context, request)
+
+            if (result is CustomCredential && result.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.data)
+
+                val credential =
+                    GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+
+                auth.signInWithCredential(credential).addOnCompleteListener() { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        Log.d("GoogleSignIn", "Google Sign-In Success: ${user?.displayName}")
+                        navController.navigate(NavigationItem.NoteScreen.route)
+                    } else {
+                        Log.e("GoogleSignIn", "Google Sign-In failed", task.exception)
+                    }
+                }
+
+            } else {
+                Log.w("GoogleSignIn", "Credential is not of type Google ID!")
+            }
+        } catch (e: Exception) {
+            Log.e("GoogleSignIn", "Google Sign-In failed", e)
+        }
+    }
 
 
     Column(
@@ -161,6 +213,22 @@ fun LoginScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                coroutineScope.launch {
+                    signInWithGoogle()
+                }
+
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = (AppColors.ButtonColor)), // Yeşil buton
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Google ile Giriş Yap", fontSize = 18.sp, color = AppColors.TextColor)
+        }
 
         // Login Button
         Button(
