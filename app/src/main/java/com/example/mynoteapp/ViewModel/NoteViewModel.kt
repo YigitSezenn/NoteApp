@@ -1,20 +1,15 @@
 package com.example.mynoteapp.ViewModel
 
-import android.provider.ContactsContract.CommonDataKinds.Note
-import com.example.mynoteapp.ViewModel.NoteViewModel.Notes
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.flow.callbackFlow
-import okhttp3.Callback
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class NoteViewModel {
     private var database: DatabaseReference = FirebaseDatabase.getInstance().reference
@@ -60,6 +55,10 @@ class NoteViewModel {
         val database = FirebaseDatabase.getInstance().reference
         val auth = FirebaseAuth.getInstance()
         val userId = auth.currentUser?.uid
+        val turkishTimeZone = TimeZone.getTimeZone("Europe/Istanbul")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        dateFormat.timeZone = turkishTimeZone
+        val noteDate = dateFormat.format(Date())
         if (userId == null) {
             println("Kullanıcı giriş yapmamış!")
             return
@@ -73,13 +72,16 @@ class NoteViewModel {
 
                     if (note != null && noteId != null) {
                         note.NoteID = noteId
+                        note.NoteDate=noteDate
+
 
                         updatedNotes.add(note)
 
 
+
                     }
                 }
-                callback(updatedNotes) // 🔥 Notları geri döndür
+  callback(updatedNotes) // 🔥 Notları geri döndür
 
             }
 
@@ -93,6 +95,11 @@ class NoteViewModel {
         val database = FirebaseDatabase.getInstance().reference
         val auth = FirebaseAuth.getInstance()
         val userId = auth.currentUser?.uid
+        val turkishTimeZone = TimeZone.getTimeZone("Europe/Istanbul")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        dateFormat.timeZone = turkishTimeZone
+        val noteDate = dateFormat.format(Date())
+
         if (userId == null) {
             println("Kullanıcı giriş yapmamış!")
             return
@@ -101,7 +108,11 @@ class NoteViewModel {
         val updateNote = Notes(
             NoteID = noteId,
             NoteTitle = noteTitle,
-            NoteBody = noteBody
+            NoteBody = noteBody,
+            NoteDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+                timeZone = TimeZone.getTimeZone("Europe/Istanbul")
+            }.format(Date())
+
         )
 
         noteref.setValue(updateNote)
@@ -111,6 +122,30 @@ class NoteViewModel {
                 println("Hata: ${e.message}")
             }
 
+
+    }
+    fun DeletedNote (noteId: String,noteTitle: String,noteBody: String)
+    {
+        val database = FirebaseDatabase.getInstance().reference
+
+        val auth = FirebaseAuth.getInstance()
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            println("Kullanıcı giriş yapmamış!")
+            return
+        }
+        val notereferance = database.child("notes").child(userId).child(noteId)
+        val deleteNote= Notes (
+            NoteID = noteId,
+            NoteTitle = noteTitle,
+            NoteBody = noteBody
+        )
+        notereferance.removeValue()
+            .addOnSuccessListener {
+                println("Not başarıyla silindi!")
+            }.addOnFailureListener { e ->
+                println("Hata: ${e.message}")
+            }
 
     }
 }

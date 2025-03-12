@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mynoteapp"
+    namespace = "com.NoteNest.mynoteapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mynoteapp"
+        applicationId = "com.NoteNest.mynoteapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -58,6 +58,7 @@ dependencies {
 
 
     implementation("com.google.firebase:firebase-analytics:22.3.0")
+    implementation ("com.canopas.compose-animated-navigationbar:bottombar:1.0.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -72,6 +73,18 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

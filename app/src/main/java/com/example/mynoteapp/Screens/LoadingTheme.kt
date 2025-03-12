@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mynoteapp.AppNavHost.NavigationItem
 import com.example.mynoteapp.AppSettings.AppColors
+
 import kotlinx.coroutines.delay
 
 private const val PADDING_PERCENTAGE_OUTER_CIRCLE = 0.15f
@@ -127,7 +128,7 @@ fun LoadingTheme(modifier: Modifier = Modifier) {
 
             // Altında "Uygulama Açılıyor..." yazısı
             Text(
-                text = "Note App'e Hoşgeldiniz",
+                text = " NoteNest'e Hoşgeldiniz",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White

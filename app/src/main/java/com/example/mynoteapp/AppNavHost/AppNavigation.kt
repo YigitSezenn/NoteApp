@@ -5,7 +5,10 @@ enum class AppNavigation {
     RegisterScreen,
     NoteScreen,
     NoteDetails,
-    LoadingScreen
+    LoadingScreen,
+    TaskScreen,
+    TaskDetails
+
 }
 
 sealed class NavigationItem(val route: String) {
@@ -14,4 +17,7 @@ sealed class NavigationItem(val route: String) {
     object NoteScreen : NavigationItem(AppNavigation.NoteScreen.name)
     object NoteDetails : NavigationItem(AppNavigation.NoteDetails.name)
     object LoadingScreen : NavigationItem(AppNavigation.LoadingScreen.name)
+    object TaskScreen : NavigationItem(AppNavigation.TaskScreen.name)
+  object  TaskDetails : NavigationItem(AppNavigation.TaskDetails.name)
+
 }

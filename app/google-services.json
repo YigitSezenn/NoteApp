@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:78899156815:android:1be335644c14b189a6d73a",
         "android_client_info": {
-          "package_name": "com.example.mynoteapp"
+          "package_name": "com.NoteNest.mynoteapp"
         }
       },
       "oauth_client": [

@@ -2,13 +2,11 @@ package com.example.mynoteapp.ViewModel
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.mynoteapp.AppNavHost.NavigationItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import kotlinx.coroutines.launch
 
 class RegisterViewModel : ViewModel() {
     @SuppressLint("NotConstructor")

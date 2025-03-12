@@ -1,11 +1,7 @@
 package com.example.mynoteapp.Screens
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Build
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +19,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,38 +26,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.credentials.Credential
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.mynoteapp.AppNavHost.NavigationItem
 import com.example.mynoteapp.AppSettings.AppColors
-import com.example.mynoteapp.R
-
 import com.example.mynoteapp.ViewModel.LoginViewModel
-import com.google.android.gms.common.api.Scope
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.auth.User
+
 import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 //val googleSignInLauncher =
 //    registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
@@ -89,6 +66,9 @@ fun LoginScreen(
     val context = LocalContext.current
     val auth = viewModel.auth
 
+    var NavigationBar by remember { mutableStateOf(false) }
+
+
 
     Column(
         modifier = Modifier
@@ -111,22 +91,22 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Welcome NoteApp",
+            text = "NoteNest'e Hoşgeldin",
             fontSize = 24.sp,
             color = Color.White
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-
-            }
-        ) { }
+//        Button(
+//            onClick = {
+//
+//            }
+//        ) { }
 
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Text", textAlign = TextAlign.Center, color = Color.White)
+
         // Email Input
         OutlinedTextField(
             value = email,
