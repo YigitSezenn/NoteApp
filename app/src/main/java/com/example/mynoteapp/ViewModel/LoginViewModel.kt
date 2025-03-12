@@ -1,26 +1,12 @@
 package com.example.mynoteapp.ViewModel
 
 
-import android.content.Context
-import android.content.Intent
-import android.content.IntentSender
-import android.credentials.GetCredentialRequest
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.credentials.CredentialManager
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.mynoteapp.AppNavHost.NavigationItem
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.cancellation.CancellationException
 
 
 class LoginViewModel : ViewModel() {
@@ -62,7 +48,27 @@ class LoginViewModel : ViewModel() {
                 }
             }
     }
+    fun SignOut(
+        navController: NavController)
+
+    {
+        if (auth.currentUser != null) {
+
+            auth.signOut()
+            navController.navigate(NavigationItem.LoginScreen.route)
+            {
+                popUpTo(NavigationItem.LoginScreen.route) {
+                    inclusive = true // popUpTo ile geri tuşuna basıldığında stackteki tüm fragmentleri temizler
+                }
+            }
+
+
+        }
+
+    }
+
 }
+
 
 //
 //    class GoogleAuthHelper(private val context: Context) {

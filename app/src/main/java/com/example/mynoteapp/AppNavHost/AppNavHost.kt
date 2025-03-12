@@ -13,16 +13,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mynoteapp.Screens.LoadingScreen
 import com.example.mynoteapp.Screens.LoginScreen
-
 import com.example.mynoteapp.Screens.NoteDetails
-
-
 import com.example.mynoteapp.Screens.NoteScreen
 import com.example.mynoteapp.Screens.RegisterScreen
+import com.example.mynoteapp.Screens.TaskDetails
+import com.example.mynoteapp.Screens.TaskScreen
 import com.example.mynoteapp.ViewModel.LoginViewModel
 import com.example.mynoteapp.ViewModel.NoteViewModel
 import com.example.mynoteapp.ViewModel.RegisterViewModel
-import com.google.android.gms.auth.api.identity.Identity
+import com.example.mynoteapp.ViewModel.TaskViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -31,7 +30,7 @@ import com.google.android.gms.auth.api.identity.Identity
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = NavigationItem.LoginScreen.route
+    startDestination: String = NavigationItem.LoadingScreen.route
 ) {
     NavHost(
         navController = navController,
@@ -56,6 +55,16 @@ fun AppNavHost(
         composable(route = "${NavigationItem.NoteDetails.route}/{NoteID}") {
             NoteDetails(navController, NoteViewModel(), it.arguments?.getString("NoteID") ?: "")
 
+        }
+        composable(route = "${NavigationItem.NoteDetails.route}/{NoteID}") {
+            NoteDetails(navController, NoteViewModel(), it.arguments?.getString("NoteID") ?: "")
+        }
+        composable(route = NavigationItem.TaskScreen.route) {
+            TaskScreen(navController, TaskViewModel())
+        }
+        composable(route = "${NavigationItem.TaskDetails.route}/{taskId}") { backStackEntry ->
+            val taskId = backStackEntry.arguments?.getString("taskId") ?: ""
+            TaskDetails(navController, TaskViewModel(), taskId)
         }
 
     }

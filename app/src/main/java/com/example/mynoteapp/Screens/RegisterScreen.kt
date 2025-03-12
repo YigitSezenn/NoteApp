@@ -1,7 +1,6 @@
 package com.example.mynoteapp.Screens
 
 import android.content.Context
-import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -54,10 +53,11 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel) {
         )
 
         Text(
-            text = "Hesabını Oluştur ve Notlarını Kaydet",
+            text = " NoteNest  ile Hesabını Oluştur",
             fontSize = 20.sp,
             color = (AppColors.SecondaryText)
         )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // First Name & Surname Input

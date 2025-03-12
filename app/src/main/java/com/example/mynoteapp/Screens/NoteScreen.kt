@@ -1,7 +1,6 @@
 package com.example.mynoteapp.Screens
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -50,17 +49,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.mynoteapp.AppNavHost.NavigationItem
 import com.example.mynoteapp.AppSettings.AppColors
 import com.example.mynoteapp.AppSettings.RandomColor
 import com.example.mynoteapp.ViewModel.NoteViewModel
+
 import kotlinx.coroutines.delay
-import java.time.Instant
-import java.util.Date
-import kotlin.time.Duration.Companion.days
 
 @Composable
 fun AddNoteFab(onClick: () -> Unit) {
@@ -71,9 +66,6 @@ fun AddNoteFab(onClick: () -> Unit) {
         visibility = true
 
     }
-
-
-
     Box(
 
         modifier = Modifier

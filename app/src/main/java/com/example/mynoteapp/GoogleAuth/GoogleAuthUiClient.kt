@@ -3,9 +3,11 @@ package com.example.mynoteapp.GoogleAuth
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import com.example.mynoteapp.R
+import com.NoteNest.mynoteapp.R
+
 import com.example.mynoteapp.ViewModel.SignInResult
 import com.example.mynoteapp.ViewModel.UserData
+
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient

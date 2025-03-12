@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -41,74 +39,56 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
-import com.example.mynoteapp.AppSettings.AppColors
-import com.example.mynoteapp.AppSettings.RandomColor
-import com.example.mynoteapp.ViewModel.NoteViewModel
+import com.example.mynoteapp.ViewModel.TaskViewModel
 import kotlinx.coroutines.delay
 
-// Alt gezinti çubuğundaki her bir öğeyi temsil eden veri sınıfı (data class)
-
-
-
 @Composable
-fun NoteDetails(navController: NavController, viewModel: NoteViewModel, noteId: String) {
+fun TaskDetails(navController: NavController, viewModel: TaskViewModel, taskId: String ) {
     val context = LocalContext.current
-    val sharedPreferences =
-        context.getSharedPreferences("MyNoteAppPrefs", Context.MODE_PRIVATE)
-    var NoteTitle by remember {
-        mutableStateOf(
-            sharedPreferences.getString("NoteTitle", "") ?: ""
-        )
+    val sharedPreferences = context.getSharedPreferences("MyTaskAppPrefs", Context.MODE_PRIVATE)
+
+    var TaskTitle by remember {
+        mutableStateOf(sharedPreferences.getString("TaskTitle", "") ?: "")
     }
-    var NoteBody by remember {
-        mutableStateOf(
-            sharedPreferences.getString("NoteBody", "") ?: ""
-        )
+    var TaskDescription by remember {
+        mutableStateOf(sharedPreferences.getString("TaskDescription", "") ?: "")
     }
-    var NoteDate by remember {
-        mutableStateOf(
-            sharedPreferences.getString("NoteDate", "") ?: ""
-        )
+    var TaskDate by remember {
+        mutableStateOf(sharedPreferences.getString("TaskDate", "") ?: "")
+    }
+    var TaskHour by remember {
+        mutableStateOf(sharedPreferences.getString("TaskHour", "") ?: "")
     }
     var ShowPopup by remember { mutableStateOf(false) }
 
-
-
-    LaunchedEffect(noteId) {
-
+    LaunchedEffect(taskId) {
         delay(3000)
-        viewModel.getNote { notelist ->
-
-            val selectednote = notelist.find { it.NoteID == noteId }
-            if (selectednote != null) {
-                NoteTitle = selectednote.NoteTitle ?: ""
-                NoteBody = selectednote.NoteBody ?: ""
-                NoteDate = selectednote.NoteDate ?: ""
+        viewModel.getTasks { taskList ->
+            val selectedTask = taskList.find { it.taskID == taskId }
+            if (selectedTask != null) {
+                TaskTitle = selectedTask.taskTitle ?: ""
+                TaskDescription = selectedTask.taskDescription ?: ""
+                TaskDate = selectedTask.taskDate ?: ""
+                TaskHour = selectedTask.taskHour ?: ""
             }
-
-
         }
-
     }
+
     Box(
-        Modifier
-            .background(AppColors.Background)
+        modifier = Modifier
+            .background(Color.Gray)
             .fillMaxSize(),
         contentAlignment = Alignment.TopCenter
-
     ) {
-
-
-        val cardColor by remember { mutableStateOf(RandomColor.getRandomColor()) }
         Card(
             modifier = Modifier
-                .size(450.dp, 150.dp) // 🔥 Boyutu sabit bırak
+                .size(450.dp, 150.dp)
                 .padding(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(cardColor.copy()),
-            shape = RoundedCornerShape(12.dp) // 🔥 Dikdörtgen yap
+            colors = CardDefaults.cardColors(Color.LightGray),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Row( // 🔥 İkonlar ve yazıları yan yana hizala
+            Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp),
@@ -116,59 +96,58 @@ fun NoteDetails(navController: NavController, viewModel: NoteViewModel, noteId: 
             ) {
                 Column(
                     modifier = Modifier
-                        .weight(0.2f) // 🔥 İkonları daha küçük alan kaplayacak şekilde ayarla
+                        .weight(0.2f)
                         .padding(end = 8.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
                         imageVector = Icons.Default.Create,
-                        contentDescription = "",
+                        contentDescription = "Düzenle",
                         tint = Color.Black,
                         modifier = Modifier
-                            .size(24.dp) // 🔥 Daha küçük yap
-                            .clickable {
-                                ShowPopup = true
-
-                            }
+                            .size(24.dp)
+                            .clickable { ShowPopup = true }
                     )
-
-                    Spacer(modifier = Modifier.height(8.dp)) // 🔥 İkonlar arası boşluk
-
+                    Spacer(modifier = Modifier.height(8.dp))
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "",
+                        contentDescription = "Sil",
                         tint = Color.Black,
-                        modifier = Modifier.size(24.dp).clickable {
-                            viewModel.DeletedNote(noteId, NoteTitle, NoteBody)
-                            navController.popBackStack()
-                        }
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                viewModel.deleteTask(taskId)
+                                navController.popBackStack()
+                            }
                     )
                 }
-
                 Column(
                     modifier = Modifier
-                        .weight(0.8f) // 🔥 Yazıların daha fazla alan kaplamasını sağla
+                        .weight(0.8f)
                         .padding(start = 8.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "Not Başlığı: $NoteTitle",
+                        text = "Görev Başlığı: $TaskTitle",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 2.dp)
                     )
-
                     Text(
-                        text = "Not İçeriği: $NoteBody",
+                        text = "Görev Açıklaması: $TaskDescription",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 2.dp)
                     )
-
                     Text(
-                        text = "Not Tarihi: $NoteDate",
+                        text = "Görev Tarihi: $TaskDate",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "Görev Saati: $TaskHour",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black
                     )
@@ -176,76 +155,65 @@ fun NoteDetails(navController: NavController, viewModel: NoteViewModel, noteId: 
             }
         }
     }
-    if (ShowPopup) {
-        NoteUpdate(
-            onDismiss = { ShowPopup = false },
-            noteViewModel = viewModel,
-            navController = navController
 
+    if (ShowPopup) {
+        TaskUpdate(
+            onDismiss = { ShowPopup = false },
+            taskViewModel = viewModel,
+            navController = navController,
+            taskId = taskId
         )
     }
 }
 
-
 @Composable
-fun NoteUpdate(
-    noteViewModel: NoteViewModel,
+fun TaskUpdate(
+    taskViewModel: TaskViewModel,
     onDismiss: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    taskId: String
 ) {
-    var noteTitle by remember { mutableStateOf("") }
-    var noteBody by remember { mutableStateOf("") }
-    var noteDate by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    val sharedPreferences =
-        LocalContext.current.getSharedPreferences("MyNoteAppPrefs", Context.MODE_PRIVATE)
+    var taskTitle by remember { mutableStateOf("") }
+    var taskDescription by remember { mutableStateOf("") }
+    var taskDate by remember { mutableStateOf("") }
+    var taskHour by remember { mutableStateOf("") }
+
     Dialog(onDismissRequest = { onDismiss() }) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .background(
-                    Color.White,
-                    shape = RoundedCornerShape(12.dp)
-                ),
+                .background(Color.White, shape = RoundedCornerShape(12.dp)),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(AppColors.Background),
+            colors = CardDefaults.cardColors(Color.LightGray)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Yeni Not Ekle",
+                    text = "Görev Güncelle",
                     fontSize = 20.sp,
                     color = Color.Black
                 )
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 OutlinedTextField(
-                    value = noteTitle,
-                    onValueChange = { noteTitle = it },
-                    label = { Text("Not Başlığı") },
+                    value = taskTitle,
+                    onValueChange = { taskTitle = it },
+                    label = { Text("Görev Başlığı") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedTextField(
-                    value = noteBody,
-                    onValueChange = { noteBody = it },
-                    label = { Text("Not İçeriği") },
+                    value = taskDescription,
+                    onValueChange = { taskDescription = it },
+                    label = { Text("Görev Açıklaması") },
                     modifier = Modifier.fillMaxWidth()
                 )
-
-
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
-
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -253,49 +221,26 @@ fun NoteUpdate(
                         modifier = Modifier
                             .height(50.dp)
                             .weight(1f),
-                        colors = ButtonDefaults.buttonColors(AppColors.ButtonColor), // Modern
                         onClick = {
-                            if (noteTitle.isNotBlank() && noteBody.isNotBlank()) {
-
-
-                                noteViewModel.UpdateNotes(
-                                    noteId = sharedPreferences.getString("NoteID", "")
-                                        ?: "",
-                                    noteTitle = noteTitle,
-                                    noteBody = noteBody
+                            if (taskTitle.isNotBlank() && taskDescription.isNotBlank()) {
+                                taskViewModel.updateTask(
+                                    taskId = taskId,
+                                    taskTitle = taskTitle,
+                                    taskDescription = taskDescription
                                 )
-
-
-                             navController.popBackStack() // geri gitsin
-
-
-
-
-
-
-
+                                navController.popBackStack()
                                 onDismiss()
                             }
-
-
                         }
                     ) {
-                        Text("Ekle", color = Color.White)
+                        Text("Güncelle", color = Color.White)
                     }
-
                     Spacer(modifier = Modifier.width(8.dp))
-
                     Button(
                         modifier = Modifier
                             .height(50.dp)
                             .weight(1f),
-                        colors = ButtonDefaults.buttonColors(AppColors.ButtonColor), // Modern
-                        onClick = {
-
-                            onDismiss()
-
-
-                        }
+                        onClick = { onDismiss() }
                     ) {
                         Text("İptal")
                     }
